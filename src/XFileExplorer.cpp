@@ -687,7 +687,7 @@ XFileExplorer::XFileExplorer(FXApp* app, vector_FXString URIs, const FXbool icon
     new FXButton(toolstoolbar, TAB+_("Launch terminal")+PARS(key), shellicon, this, XFileExplorer::ID_XTERM, BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
 
     key = getApp()->reg().readStringEntry("KEYBINDINGS", "search", "Ctrl-F");
-    new FXButton(toolstoolbar, _("Search")+TAB+_("Search files and folders...")+PARS(key), searchicon, this, XFileExplorer::ID_FILE_SEARCH, BUTTON_TOOLBAR|ICON_BEFORE_TEXT|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
+    new FXButton(toolstoolbar, TAB+_("Search files and folders...")+PARS(key), searchicon, this, XFileExplorer::ID_FILE_SEARCH, BUTTON_TOOLBAR|ICON_BEFORE_TEXT|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
 
 #if defined(linux)
     toolbarSeparator(toolstoolbar);
