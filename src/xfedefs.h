@@ -39,14 +39,6 @@
 #define DEFAULT_WINDOW_YPOS    50
 #endif
 
-// Maximum sizes for thumbnail image preview
-#ifndef MAX_BIGTHUMB_SIZE
-#define MAX_BIGTHUMB_SIZE     64
-#endif
-#ifndef MAX_MINITHUMB_SIZE
-#define MAX_MINITHUMB_SIZE    20
-#endif
-
 // Minimum width of a file panel or directory panel
 #ifndef MIN_PANEL_WIDTH
 #define MIN_PANEL_WIDTH    100
