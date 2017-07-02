@@ -1195,7 +1195,7 @@ XFileExplorer::XFileExplorer(FXApp* app, vector_FXString URIs, const FXbool icon
     // Initial focus is on (left) file panel
     panelfocus = FILEPANEL_FOCUS;
 
-    // Trahscan locations
+    // Trashcan locations
     trashfileslocation = xdgdatahome + PATHSEPSTRING TRASHFILESPATH;
     trashinfolocation = xdgdatahome + PATHSEPSTRING TRASHINFOPATH;
 
@@ -3273,7 +3273,7 @@ long XFileExplorer::onCmdRefresh(FXObject*,FXSelector,void*)
 	rpanel->onCmdRefresh(0,0,0);
 	dirpanel->forceRefresh();
     getApp()->endWaitCursor();
-    
+
     return 1;
 }
 
@@ -3287,7 +3287,7 @@ long XFileExplorer::onUpdFileLocation(FXObject* sender,FXSelector,void*)
         address->setText(::cleanPath(currentdir));
         prevdir=currentdir;
     }
-    
+
     return 1;
 }
 

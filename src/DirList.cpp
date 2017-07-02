@@ -216,7 +216,7 @@ DirList::DirList(FXWindow* focuswin, FXComposite* p, FXObject* tgt, FXSelector s
     }
 #endif
 
-    // Trahscan location
+    // Trashcan location
     trashfileslocation = xdgdatahome + PATHSEPSTRING TRASHFILESPATH;
     trashinfolocation = xdgdatahome + PATHSEPSTRING TRASHINFOPATH;
 }

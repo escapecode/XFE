@@ -145,7 +145,7 @@ SearchPanel::SearchPanel(FXComposite* p, FXuint name_size, FXuint dir_size, FXui
 	// Set list style
     FXuint liststyle = getApp()->reg().readUnsignedEntry("SEARCH PANEL", "liststyle", _ICONLIST_DETAILED);
     list->setListStyle(liststyle);
-	
+
 	// Set dirs first
     FXuint dirsfirst = getApp()->reg().readUnsignedEntry("SEARCH PANEL", "dirs_first", 1);
     list->setDirsFirst(dirsfirst);
@@ -251,7 +251,7 @@ SearchPanel::SearchPanel(FXComposite* p, FXuint name_size, FXuint dir_size, FXui
     operationdialogmultiple = NULL;
     comparedialog = NULL;
 
-    // Trahscan locations
+    // Trashcan locations
     trashfileslocation = xdgdatahome + PATHSEPSTRING TRASHFILESPATH;
     trashinfolocation = xdgdatahome + PATHSEPSTRING TRASHINFOPATH;
 
@@ -2883,12 +2883,12 @@ long SearchPanel::onCmdFileTrash(FXObject*, FXSelector, void*)
                     f->hideProgressDialog();
                     FXString msg;
                     msg.format(_("File %s is write-protected, move it anyway to trash can?"), pathname.text());
-  
+
 					if (num ==1)
 					{
 						OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Trash"), msg, OVWBOX_SINGLE_FILE);
 						FXuint answer = dlg->execute(PLACEMENT_OWNER);
-						delete dlg;	
+						delete dlg;
 						if (answer == 1)
 						{
 							overwrite = true;
@@ -2897,7 +2897,7 @@ long SearchPanel::onCmdFileTrash(FXObject*, FXSelector, void*)
 						{
 							goto end;
 						}
-					}  
+					}
 					else
 					{
 						OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Trash"), msg);
@@ -3154,9 +3154,9 @@ long SearchPanel::onCmdFileDelete(FXObject*, FXSelector, void*)
 							else
 							{
 								goto end;
-							}							
+							}
 						}
-                        
+
                         else
                         {
 							OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Delete"), msg);
@@ -3709,7 +3709,7 @@ x:
 	{
 		targetdir = FXPath::directory(target);
 	}
- 
+
     // Target directory not writable
     if (!::isWritable(targetdir))
     {

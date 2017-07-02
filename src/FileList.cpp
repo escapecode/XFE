@@ -138,7 +138,7 @@ FXIMPLEMENT(FileList, IconList, FileListMap, ARRAYNUMBER(FileListMap))
 // Note : the attribute _ICONLIST_FILELIST indicates that the icon list is a file list
 FileList::FileList(FXWindow* focuswin, FXComposite* p, FXObject* tgt, FXSelector sel, FXbool showthumbs, FXuint opts, int x, int y, int w, int h) :
     IconList(p, tgt, sel, opts, x, y, w, h), directory(ROOTDIR), orgdirectory(ROOTDIR), pattern("*")
-{ 
+{
     flags |= FLAG_ENABLED|FLAG_DROPTARGET;
     associations = NULL;
     appendHeader(_("Name"), NULL, 200);
@@ -267,7 +267,7 @@ FileList::FileList(FXWindow* focuswin, FXComposite* p, FXObject* tgt, FXSelector
     }
 #endif
 
-    // Trahscan location
+    // Trashcan location
     trashfileslocation = xdgdatahome + PATHSEPSTRING TRASHFILESPATH;
     trashinfolocation = xdgdatahome + PATHSEPSTRING TRASHINFOPATH;
 }
