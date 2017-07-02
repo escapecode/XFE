@@ -4874,9 +4874,6 @@ void FileList::listItems(FXbool force)
                     continue;
                 }
 
-                // Assume no associations
-                fileassoc = NULL;
-
                 // Is it a directory or does it match the pattern?
                 fileassoc = associations->findFileBinding(pathname.text());
                 filetype = (fileassoc) ? fileassoc->extension : "";
@@ -4886,9 +4883,11 @@ void FileList::listItems(FXbool force)
                     || (match_by_type && ! FXPath::match(pattern.text(), filetype.text(), FILEMATCH_CASEFOLD)))
                     )
                 {
-					printf("0 \n");
                     continue;
                 }
+
+                // Assume no associations
+                fileassoc = NULL;
 
                 // File times
                 filemtime = linfo.st_mtime;
