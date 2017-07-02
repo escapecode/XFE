@@ -60,7 +60,6 @@ extern FXbool   allowPopupScroll;
 extern FXString xdgdatahome;
 
 
-
 // Object implementation
 FXIMPLEMENT(FileItem, IconItem, NULL, 0)
 
@@ -166,6 +165,7 @@ FileList::FileList(FXWindow* focuswin, FXComposite* p, FXObject* tgt, FXSelector
     dropaction = DRAG_MOVE;
     sortfunc = ascendingCase;
     dirsfirst = true;
+    match_by_type = false;
     allowrefresh = true;
     timestamp = 0;
     counter = 1;
@@ -3849,6 +3849,10 @@ void FileList::setDirectory(const FXString& pathname, const FXbool histupdate, F
     }
 }
 
+void FileList::setFilterType(FXbool use_type)
+{
+	match_by_type = use_type;
+}
 
 // Set the pattern to filter
 void FileList::setPattern(const FXString& ptrn)
@@ -4875,9 +4879,19 @@ void FileList::listItems(FXbool force)
                     continue;
                 }
 
+                // Assume no associations
+                fileassoc = NULL;
+
                 // Is it a directory or does it match the pattern?
-                if (!S_ISDIR(linfo.st_mode) && !FXPath::match(pattern, name, matchmode))
+                fileassoc = associations->findFileBinding(pathname.text());
+                filetype = (fileassoc) ? fileassoc->extension : "";
+
+                if (!S_ISDIR(linfo.st_mode)
+                    && ((!match_by_type && !FXPath::match(pattern, name, matchmode))
+                    || (match_by_type && ! FXPath::match(pattern.text(), filetype.text(), FILEMATCH_CASEFOLD)))
+                    )
                 {
+					printf("0 \n");
                     continue;
                 }
 
@@ -5119,11 +5133,9 @@ fnd:
                         item->state &= ~FileItem::EXECUTABLE;
                     }
 
+                    filetype = "";
                     // We can drag items
                     item->state |= FileItem::DRAGGABLE;
-
-                    // Assume no associations
-                    fileassoc = NULL;
 
                     // Determine icons and type
                     if (item->state&FileItem::FOLDER)

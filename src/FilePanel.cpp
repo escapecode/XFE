@@ -4268,7 +4268,7 @@ long FilePanel::onCmdItemFilter(FXObject* o, FXSelector sel, void*)
     FXString pat = list->getPattern();
     if (filterdialog == NULL)
     {
-        filterdialog = new HistInputDialog(this, pat, _("Show files:"), _("Filter"), "", bigfiltericon, HIST_INPUT_FILE);
+        filterdialog = new HistInputDialog(this, pat, _("Show files:"), _("Filter"), "", bigfiltericon, HIST_INPUT_FILE, true,_("Search using type column, instead of by name"));
     }
     filterdialog->CursorEnd();
     filterdialog->selectAll();
@@ -4278,6 +4278,8 @@ long FilePanel::onCmdItemFilter(FXObject* o, FXSelector sel, void*)
         filterdialog->appendItem(FilterHistory[i]);
     }
     filterdialog->sortItems();
+
+    list->setFilterType(filterdialog->getOption());
 
     if (filterdialog->execute() && ((pat = filterdialog->getText()) != ""))
     {

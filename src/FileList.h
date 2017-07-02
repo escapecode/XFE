@@ -141,6 +141,7 @@ protected:
     FXString     trashfileslocation; // Location of the trash files directory
     FXString     trashinfolocation;  // Location of the trash info directory
     FXbool       dirsfirst;          // Sort directories first
+	FXbool         match_by_type;  // Filter searches by file type vs file name
     int          deldatesize;
     int          origpathsize;
     FXWindow*    focuswindow;          // Window used to test focus
@@ -344,6 +345,9 @@ public:
     {
         return(directory);
     }
+
+	// boolean to filter search on file name or file type
+	void setFilterType(FXbool use_type);
 
     // Change wildcard matching pattern
     void setPattern(const FXString& ptrn);
