@@ -187,7 +187,7 @@ PreferencesBox::PreferencesBox(FXWindow* win, FXColor listbackcolor, FXColor lis
     diropen = new FXCheckButton(group, _("Single click folder open"));
     fileopen = new FXCheckButton(group, _("Single click file open"), this, ID_SINGLE_CLICK_FILEOPEN);
     filetooltips = new FXCheckButton(group, _("Display tooltips in file and folder lists"), this, ID_FILE_TOOLTIPS);
-    relativeresize = new FXCheckButton(group, _("Relative resizing of file lists"), this, ID_RELATIVE_RESIZE);
+    relativeresize = new FXCheckButton(group, _("Relative resizing of panels and contents when app resized"), this, ID_RELATIVE_RESIZE);
     showpathlink = new FXCheckButton(group, _("Display a path linker above file lists"), this, ID_SHOW_PATHLINK);
 #ifdef STARTUP_NOTIFICATION
     usesn = new FXCheckButton(group, _("Notify when applications start up"));
@@ -232,10 +232,10 @@ PreferencesBox::PreferencesBox(FXWindow* win, FXColor listbackcolor, FXColor lis
     max_mini_thumb_size_prev = getApp()->reg().readStringEntry("OPTIONS", "max_mini_thumb_size", "20");
     thumbnail_small->setText(max_mini_thumb_size_prev);
 
-    group = new FXGroupBox(modes, _("Folder mode"), GROUPBOX_TITLE_LEFT|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y);
-    folderlimit = new FXCheckButton(group, _("Limit foders visible (home and mnt folders by default)"));
+    group = new FXGroupBox(modes, _("Folders visible mode"), GROUPBOX_TITLE_LEFT|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y);
+    folderlimit = new FXCheckButton(group, _("Limit foders visible in directory tree and file panels"));
     matrix = new FXMatrix(group, 2, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_Y);
-    new FXLabel(matrix, _("Override visible folders from home and mnt to these folders (separate by comma"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
+    new FXLabel(matrix, _("Override visible folders from default of home, /mnt and /media folders (separate folder paths by colon"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
     folders = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
 	// - assign
     FXbool folderlimit_prev = getApp()->reg().readUnsignedEntry("OPTIONS", "folder_limit", false);
