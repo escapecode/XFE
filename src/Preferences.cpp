@@ -123,6 +123,7 @@ FXDEFMAP(PreferencesBox) PreferencesMap[] =
     FXMAPFUNC(SEL_UPDATE, PreferencesBox::ID_START_HOMEDIR, PreferencesBox::onUpdStartDir),
     FXMAPFUNC(SEL_UPDATE, PreferencesBox::ID_START_CURRENTDIR, PreferencesBox::onUpdStartDir),
     FXMAPFUNC(SEL_UPDATE, PreferencesBox::ID_START_LASTDIR, PreferencesBox::onUpdStartDir),
+    FXMAPFUNC(SEL_UPDATE, PreferencesBox::ID_FOLDER_LIMIT_FOLDERS, PreferencesBox::onCmdHomeAndMntOnly),
 };
 
 // Object implementation
@@ -217,6 +218,29 @@ PreferencesBox::PreferencesBox(FXWindow* win, FXColor listbackcolor, FXColor lis
     spinner->setRange(1, 100);
     FXbool smoothscroll = getApp()->reg().readUnsignedEntry("SETTINGS", "smooth_scroll", true);
     scroll->setCheck(smoothscroll);
+
+    group = new FXGroupBox(modes, _("Thumbnails"), GROUPBOX_TITLE_LEFT|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y);
+    matrix = new FXMatrix(group, 2, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_Y);
+    new FXLabel(matrix, _("Thumbnail small size"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
+    thumbnail_small = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
+    new FXLabel(matrix, _("Thumbnail big size"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
+    thumbnail_big = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
+	// - assign
+    max_big_thumb_size_prev = getApp()->reg().readStringEntry("OPTIONS", "max_big_thumb_size", "160");	// TODO make it so stored as int
+    thumbnail_big->setText(max_big_thumb_size_prev);
+    max_mini_thumb_size_prev = getApp()->reg().readStringEntry("OPTIONS", "max_mini_thumb_size", "20");
+    thumbnail_small->setText(max_mini_thumb_size_prev);
+
+    group = new FXGroupBox(modes, _("Folder mode"), GROUPBOX_TITLE_LEFT|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y);
+    folderlimit = new FXCheckButton(group, _("Limit foders visible (home and mnt folders by default)"));
+    matrix = new FXMatrix(group, 2, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_Y);
+    new FXLabel(matrix, _("Override visible folders from home and mnt to these folders (separate by comma"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
+    folders = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
+	// - assign
+    FXbool folderlimit_prev = getApp()->reg().readUnsignedEntry("OPTIONS", "folder_limit", false);
+    folderlimit->setCheck(folderlimit_prev);
+    folders_prev = getApp()->reg().readStringEntry("OPTIONS", "folder_limit_folders", "/mnt:/media");
+    folders->setText(folders_prev);
 
     group = new FXGroupBox(modes, _("Root mode"), GROUPBOX_TITLE_LEFT|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y);
     rootmode = new FXCheckButton(group, _("Allow root mode"));
@@ -557,6 +581,8 @@ PreferencesBox::PreferencesBox(FXWindow* win, FXColor listbackcolor, FXColor lis
     exec_prev = false;
     use_clearlooks_prev = false;
     rootmode_prev = false;
+    folderlimit_prev = false;
+    folders_prev = "";
 #ifdef STARTUP_NOTIFICATION
     usesn_prev = false;
 #endif
@@ -1685,6 +1711,10 @@ long PreferencesBox::onCmdAccept(FXObject* o, FXSelector s, void* p)
     getApp()->reg().writeUnsignedEntry("OPTIONS", "startdir_mode", startdirmode-ID_START_HOMEDIR);
     getApp()->reg().writeUnsignedEntry("OPTIONS", "root_warn", root_warning->getCheck());
     getApp()->reg().writeUnsignedEntry("OPTIONS", "root_mode", rootmode->getCheck());
+    getApp()->reg().writeUnsignedEntry("OPTIONS", "folder_limit", folderlimit->getCheck());
+    getApp()->reg().writeStringEntry("OPTIONS", "folder_limit_folders", folders->getText().text());
+    getApp()->reg().writeStringEntry("OPTIONS", "max_big_thumb_size", thumbnail_big->getText().text());
+    getApp()->reg().writeStringEntry("OPTIONS", "max_mini_thumb_size", thumbnail_small->getText().text());
 #ifdef STARTUP_NOTIFICATION
     getApp()->reg().writeUnsignedEntry("OPTIONS", "use_startup_notification", usesn->getCheck());
 #endif
@@ -1897,6 +1927,8 @@ long PreferencesBox::onCmdCancel(FXObject* o, FXSelector s, void* p)
     rootmode->setCheck(rootmode_prev);
     timeformat->setText(oldtimeformat);
     startdirmode = oldstartdirmode;
+    folderlimit->setCheck(folderlimit_prev);
+    folders->setText(folders_prev);
 
 #ifdef STARTUP_NOTIFICATION
     usesn->setCheck(usesn_prev);
@@ -1971,6 +2003,8 @@ FXuint PreferencesBox::execute(FXuint placement)
     use_sudo_prev = use_sudo;
     smoothscroll_prev = scroll->getCheck();
     rootmode_prev = rootmode->getCheck();
+    folderlimit_prev = folderlimit->getCheck();
+    folders_prev = folders->getText();
 #ifdef STARTUP_NOTIFICATION
     usesn_prev = usesn->getCheck();
 #endif
@@ -2206,6 +2240,18 @@ long PreferencesBox::onUpdSingleClickFileopen(FXObject* o, FXSelector, void*)
     return(1);
 }
 
+long PreferencesBox::onCmdHomeAndMntOnly(FXObject*, FXSelector sel, void*)
+{
+    // startdirmode = FXSELID(sel);
+
+    return(1);
+}
+
+long PreferencesBox::onUpdHomeAndMntOnly(FXObject* sender, FXSelector sel, void*)
+{
+    sender->handle(this, (FXSELID(sel) == startdirmode) ? FXSEL(SEL_COMMAND, ID_CHECK) : FXSEL(SEL_COMMAND, ID_UNCHECK), (void*)&startdirmode);
+    return(1);
+}
 
 // Start directory mode
 long PreferencesBox::onCmdStartDir(FXObject*, FXSelector sel, void*)

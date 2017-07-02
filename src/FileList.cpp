@@ -4436,15 +4436,18 @@ FXbool FileList::updateItems(FXbool force)
                     register FXuint h = bigthumb->getHeight();
 
                     // Eventually scale the big icon (best quality)
-                    if ((w > MAX_BIGTHUMB_SIZE) || (h > MAX_BIGTHUMB_SIZE))
+                    FXuint max_mini_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_mini_thumb_size", "20"));
+                    FXuint max_big_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_big_thumb_size", "160"));
+
+                    if ((w > max_big_thumb_size) || (h > max_big_thumb_size))
                     {
                         if (w > h)
                         {
-                            bigthumb->scale(MAX_BIGTHUMB_SIZE, (MAX_BIGTHUMB_SIZE*h)/w, 1);
+                            bigthumb->scale(max_big_thumb_size, (max_big_thumb_size*h)/w, 1);
                         }
                         else
                         {
-                            bigthumb->scale((MAX_BIGTHUMB_SIZE*w)/h, MAX_BIGTHUMB_SIZE, 1);
+                            bigthumb->scale((max_big_thumb_size*w)/h, max_big_thumb_size, 1);
                         }
 
                         // Size has changed
@@ -4464,15 +4467,15 @@ FXbool FileList::updateItems(FXbool force)
                     // Eventually scale the mini icon (best quality)
                     w = minithumb->getWidth();
                     h = minithumb->getHeight();
-                    if ((w > MAX_MINITHUMB_SIZE) || (h > MAX_MINITHUMB_SIZE))
+                    if ((w > max_mini_thumb_size) || (h > max_mini_thumb_size))
                     {
                         if (w > h)
                         {
-                            minithumb->scale(MAX_MINITHUMB_SIZE, (MAX_MINITHUMB_SIZE*h)/w, 1);
+                            minithumb->scale(max_mini_thumb_size, (max_mini_thumb_size*h)/w, 1);
                         }
                         else
                         {
-                            minithumb->scale((MAX_MINITHUMB_SIZE*w)/h, MAX_MINITHUMB_SIZE, 1);
+                            minithumb->scale((max_mini_thumb_size*w)/h, max_mini_thumb_size, 1);
                         }
                     }
 
@@ -4700,6 +4703,37 @@ void FileList::listItems(FXbool force)
                 {
                     continue;
                 }
+
+				if (getApp()->reg().readUnsignedEntry("OPTIONS", "folder_limit", false) == true)
+				{
+					//printf("folder_limit\n");
+					FXString homedir = FXSystem::getHomeDirectory();
+					FXString aaa = (directory == "/") ? "" : directory;
+					aaa += "/" + name;
+					//printf("file %s\n", aaa.text());
+
+					bool bypass = true;
+					FXString folder_paths = getApp()->reg().readStringEntry("OPTIONS", "folder_limit_folders", "/mnt:/media");
+					folder_paths = (streq(folder_paths.text(), "")) ? "/mnt:/media" : folder_paths;
+					FXString this_folder = "";
+					for (int x=0; x <= folder_paths.contains(":"); x++)
+					{
+						this_folder = folder_paths.section(":", x);
+						if (streq(aaa.left(this_folder.length()).text(), this_folder.text()))
+						{
+							bypass = false;
+						}
+					}
+
+					if (
+						bypass == true
+						&& ! streq(homedir.left(aaa.length()).text(), aaa.text())
+						&& ! streq(aaa.left(homedir.length()).text(), homedir.text())
+					)
+					{
+						continue;
+					}
+				}
 
                 // Build full pathname
                 pathname = dirname+name;
@@ -5154,6 +5188,10 @@ fnd:
                     // Attempt to load thumbnails for image files
                     if (displaythumbnails)
                     {
+						 FXuint max_mini_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_mini_thumb_size", "20"));
+						 FXuint max_big_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_big_thumb_size", "160"));
+						 // printf("thumb %i, %i\n", max_mini_thumb_size, max_big_thumb_size);
+
                         // Load big icon from file
                         bigthumb = NULL;
                         minithumb = NULL;
@@ -5172,15 +5210,15 @@ fnd:
                             register FXuint h = bigthumb->getHeight();
 
                             // Eventually scale the big icon (best quality)
-                            if ((w > MAX_BIGTHUMB_SIZE) || (h > MAX_BIGTHUMB_SIZE))
+                            if ((w > max_big_thumb_size) || (h > max_big_thumb_size))
                             {
                                 if (w > h)
                                 {
-                                    bigthumb->scale(MAX_BIGTHUMB_SIZE, (MAX_BIGTHUMB_SIZE*h)/w, 1);
+                                    bigthumb->scale(max_big_thumb_size, (max_big_thumb_size*h)/w, 1);
                                 }
                                 else
                                 {
-                                    bigthumb->scale((MAX_BIGTHUMB_SIZE*w)/h, MAX_BIGTHUMB_SIZE, 1);
+                                    bigthumb->scale((max_big_thumb_size*w)/h, max_big_thumb_size, 1);
                                 }
 
                                 // Size has changed
@@ -5200,15 +5238,15 @@ fnd:
                             // Eventually scale the mini icon (best quality)
                             w = minithumb->getWidth();
                             h = minithumb->getHeight();
-                            if ((w > MAX_MINITHUMB_SIZE) || (h > MAX_MINITHUMB_SIZE))
+                            if ((w > max_mini_thumb_size) || (h > max_mini_thumb_size))
                             {
                                 if (w > h)
                                 {
-                                    minithumb->scale(MAX_MINITHUMB_SIZE, (MAX_MINITHUMB_SIZE*h)/w, 1);
+                                    minithumb->scale(max_mini_thumb_size, (max_mini_thumb_size*h)/w, 1);
                                 }
                                 else
                                 {
-                                    minithumb->scale((MAX_MINITHUMB_SIZE*w)/h, MAX_MINITHUMB_SIZE, 1);
+                                    minithumb->scale((max_mini_thumb_size*w)/h, max_mini_thumb_size, 1);
                                 }
                             }
 

@@ -683,6 +683,12 @@ XFileExplorer::XFileExplorer(FXApp* app, vector_FXString URIs, const FXbool icon
     key = getApp()->reg().readStringEntry("KEYBINDINGS", "execute_command", "Ctrl-E");
     new FXButton(toolstoolbar, TAB+_("Execute command")+PARS(key), runicon, this, XFileExplorer::ID_RUN, BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
 
+    key = getApp()->reg().readStringEntry("KEYBINDINGS", "switch_panels", "Ctrl-K");
+    new FXButton(toolstoolbar, TAB+_("Switch file panels")+PARS(key), switchpanelsicon, this, XFileExplorer::ID_SWITCH_PANELS, BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
+
+    key = getApp()->reg().readStringEntry("KEYBINDINGS", "synchronize_panels", "Ctrl-Y");
+    new FXButton(toolstoolbar, TAB+_("Synchronize file panels")+PARS(key), syncpanelsicon, this, XFileExplorer::ID_SYNCHRONIZE_PANELS, BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
+
     key = getApp()->reg().readStringEntry("KEYBINDINGS", "terminal", "Ctrl-T");
     new FXButton(toolstoolbar, TAB+_("Launch terminal")+PARS(key), shellicon, this, XFileExplorer::ID_XTERM, BUTTON_TOOLBAR|FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
 

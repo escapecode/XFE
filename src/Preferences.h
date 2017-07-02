@@ -70,12 +70,15 @@ private:
     FXTextField*   textfont;
     FXTextField*   mountcmd;
     FXTextField*   umountcmd;
+    FXTextField*   thumbnail_big;
+    FXTextField*   thumbnail_small;
     FXString       oldiconpath;
     FXString       oldtxtviewer;
     FXString       oldtxteditor;
     FXString       oldfilecomparator;
     FXString       oldtimeformat;
     FXString       oldimgviewer;
+    FXString       oldfolders;
     FXString       oldxterm;
     FXString       oldnormalfont;
     FXString       oldtextfont;
@@ -111,6 +114,7 @@ private:
     FXCheckButton* mount;
     FXCheckButton* show_mount;
     FXCheckButton* scroll;
+    FXCheckButton* folderlimit;
     FXCheckButton* controls;
     FXDataTarget   startdirtarget;
     int            startdirmode;
@@ -146,6 +150,10 @@ private:
     FXbool       use_clearlooks;
     FXbool       use_clearlooks_prev;
     FXbool       rootmode_prev;
+    FXbool       folderlimit_prev;
+    FXString      folders_prev;
+    FXString		max_big_thumb_size_prev;
+    FXString		max_mini_thumb_size_prev;
 #ifdef STARTUP_NOTIFICATION
     FXbool usesn_prev;
 #endif
@@ -230,7 +238,9 @@ public:
         ID_START_CURRENTDIR,
         ID_START_LASTDIR,
         ID_LAST
-    };
+        ID_FOLDER_LIMIT,
+        ID_FOLDER_LIMIT_FOLDERS
+     };
 
 public:
     PreferencesBox(FXWindow* win, FXColor listbackcolor = FXRGB(255, 255, 255), FXColor listforecolor = FXRGB(0, 0, 0), FXColor highlightcolor = FXRGB(238, 238, 238), FXColor pbarcolor = FXRGB(0, 0, 255), FXColor attentioncolor = FXRGB(255, 0, 0), FXColor scrollbackcolor = FXRGB(237, 233, 227));
@@ -257,5 +267,7 @@ public:
     long   onCmdRestoreKeyBindings(FXObject*, FXSelector, void*);
     long   onCmdStartDir(FXObject*, FXSelector, void*);
     long   onUpdStartDir(FXObject*, FXSelector, void*);
+    long   onCmdHomeAndMntOnly(FXObject*, FXSelector, void*);
+    long   onUpdHomeAndMntOnly(FXObject*, FXSelector, void*);
 };
 #endif

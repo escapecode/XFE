@@ -1725,6 +1725,43 @@ void DirList::listChildItems(DirItem* par)
                 continue;
             }
 
+            if (getApp()->reg().readUnsignedEntry("OPTIONS", "folder_limit", false) == true)
+           {
+			   // TODO use folders
+			   if (false)
+			   {
+				   // if (streq(getApp()->reg().readStringEntry("OPTIONS", "folder_limit_folders", ""), ""))
+				}
+				else
+				{
+					FXString homedir = FXSystem::getHomeDirectory();
+					FXString current_path_and_name = (directory == "/") ? "" : directory;
+					current_path_and_name += "/" + name;
+
+					bool bypass = true;
+					FXString folder_paths = getApp()->reg().readStringEntry("OPTIONS", "folder_limit_folders", "/mnt:/media");
+					folder_paths = (streq(folder_paths.text(), "")) ? "/mnt:/media" : folder_paths;
+					FXString this_folder = "";
+					for (int x=0; x <= folder_paths.contains(":"); x++)
+					{
+						this_folder = folder_paths.section(":", x);
+						if (streq(current_path_and_name.left(this_folder.length()).text(), this_folder.text()))
+						{
+							bypass = false;
+						}
+					}
+
+					if (
+						bypass == true
+						&& ! streq(homedir.left(current_path_and_name.length()).text(), current_path_and_name.text())
+						&& ! streq(current_path_and_name.left(homedir.length()).text(), homedir.text())
+					)
+					{
+						continue;
+					}
+				}
+			}
+
             // Hidden file or directory normally not shown
             if ((name[0] == '.') && !(options&DIRLIST_SHOWHIDDEN))
             {
