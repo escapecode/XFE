@@ -238,7 +238,7 @@ public:
         ID_START_HOMEDIR,
         ID_START_CURRENTDIR,
         ID_START_LASTDIR,
-        ID_LAST
+        ID_LAST,
         ID_FOLDER_LIMIT,
         ID_FOLDER_LIMIT_FOLDERS
      };
