@@ -1071,7 +1071,6 @@ long FileList::onUpdToggleFolders(FXObject* sender, FXSelector, void*)
 // Show hidden files
 long FileList::onCmdShowFolders(FXObject*, FXSelector, void*)
 {
-	printf("onCmdShowFolders %i\n", hiddenFolders());
     showFolders(false);
     return(1);
 }
@@ -1080,7 +1079,6 @@ long FileList::onCmdShowFolders(FXObject*, FXSelector, void*)
 // Update show hidden files widget
 long FileList::onUpdShowFolders(FXObject* sender, FXSelector, void*)
 {
-	printf("onUpdShowFolders %i\n", hiddenFolders());
     if (hiddenFolders())
     {
         sender->handle(this, FXSEL(SEL_COMMAND, ID_CHECK), NULL);
@@ -3906,11 +3904,8 @@ void FileList::showFolders(FXbool shown)
 {
     FXuint opts = shown ? (options|_FILELIST_SHOWFOLDERS) : (options&~_FILELIST_SHOWFOLDERS);
 
-    printf("showfolders %i %i %i\n", shown, options, opts);
-
     if (opts != options)
     {
-		printf(" scan\n");
         options = opts;
         scan(true);
     }
