@@ -160,6 +160,7 @@ public:
         ID_PKG_UNINSTALL,
 #endif
         ID_LAST,
+        ID_TOGGLE_FOLDERS,
     };
 public:
     long onClipboardGained(FXObject*, FXSelector, void*);
@@ -201,6 +202,8 @@ public:
     long onUpdPaste(FXObject*, FXSelector, void*);
     long onCmdToggleHidden(FXObject*, FXSelector, void*);
     long onUpdToggleHidden(FXObject*, FXSelector, void*);
+    long onCmdToggleFolders(FXObject*, FXSelector, void*);
+    long onUpdToggleFolders(FXObject*, FXSelector, void*);
     long onCmdToggleThumbnails(FXObject*, FXSelector, void*);
     long onCmdRunScript(FXObject*, FXSelector, void*);
 	long onCmdDirUsage(FXObject*, FXSelector, void*);
@@ -322,6 +325,18 @@ public:
     void showHiddenFiles(FXbool shown)
     {
         list->showHiddenFiles(shown);
+    }
+
+    // Hidden folders shown?
+    FXbool hiddenFolders(void) const
+    {
+        return(list->hiddenFolders());
+    }
+
+    // Show hidden folders
+    void showFolders(FXbool shown)
+    {
+        list->showFolders(shown);
     }
 
     // Thumbnails shown?

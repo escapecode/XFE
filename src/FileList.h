@@ -13,6 +13,7 @@ class FileList;
 enum
 {
     _FILELIST_SHOWHIDDEN   = 0x04000000, // Show hidden files or directories
+    _FILELIST_SHOWFOLDERS   = 0x20000000, // Show hidden folders
     _FILELIST_SHOWDIRS     = 0x08000000, // Show only directories
     _FILELIST_SEARCH       = 0x10000000, // File list is a search list (must be the same value as in IconList)
 };
@@ -209,6 +210,12 @@ public:
     long onUpdShowHidden(FXObject*, FXSelector, void*);
     long onCmdHideHidden(FXObject*, FXSelector, void*);
     long onUpdHideHidden(FXObject*, FXSelector, void*);
+    long onCmdToggleFolders(FXObject*, FXSelector, void*);
+    long onUpdToggleFolders(FXObject*, FXSelector, void*);
+    long onCmdShowFolders(FXObject*, FXSelector, void*);
+    long onUpdShowFolders(FXObject*, FXSelector, void*);
+    long onCmdHideFolders(FXObject*, FXSelector, void*);
+    long onUpdHideFolders(FXObject*, FXSelector, void*);
     long onCmdHeader(FXObject*, FXSelector, void*);
     long onUpdHeader(FXObject*, FXSelector, void*);
     long onCmdToggleThumbnails(FXObject*, FXSelector, void*);
@@ -307,7 +314,10 @@ public:
         ID_DRAG_MOVE,
         ID_DRAG_LINK,
         ID_DRAG_REJECT,
-        ID_LAST
+        ID_LAST,
+        ID_SHOW_FOLDERS,
+        ID_HIDE_FOLDERS,
+        ID_TOGGLE_FOLDERS
     };
 public:
 
@@ -440,6 +450,12 @@ public:
     // Show or hide hidden files
     void showHiddenFiles(FXbool showing);
 
+    // Return true if showing hidden folders
+    FXbool hiddenFolders() const;
+
+    // Show or hide hidden folders
+    void showFolders(FXbool showing);
+
     // Return true if displaying thumbnails
     FXbool shownThumbnails() const;
 
@@ -460,6 +476,10 @@ public:
     {
         return(associations);
     }
+
+    // Show or hide folders
+    void ShowFolders(FXbool showing);
+    void HideFolders(FXbool showing);
 
 #if defined(linux)
     // Force mtdevices list refresh

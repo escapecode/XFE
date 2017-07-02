@@ -213,6 +213,10 @@ XFileExplorer::XFileExplorer(FXApp* app, vector_FXString URIs, const FXbool icon
     // Smooth scrolling
     smoothscroll = getApp()->reg().readUnsignedEntry("SETTINGS", "smooth_scroll", true);
 
+   // Limit visible folders
+   bool hide_filelist_folders_prev = getApp()->reg().readUnsignedEntry("SETTINGS", "hide_filelist_folders", false);
+   getApp()->reg().writeUnsignedEntry("SETTINGS", "hide_filelist_folders", hide_filelist_folders_prev);
+
     // Directory panel on the left (with minimum size)
     dirpanel = new DirPanel(this, mainsplit, listbackcolor, listforecolor, smoothscroll, LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y|FRAME_NONE, 0, 0, 0, 0);
 
@@ -1026,6 +1030,7 @@ XFileExplorer::XFileExplorer(FXApp* app, vector_FXString URIs, const FXbool icon
     new FXMenuCheck(lpanelmenu, _("I&gnore case"), lpanel->getList(), FileList::ID_SORT_CASE);
     new FXMenuCheck(lpanelmenu, _("Fol&ders first"), lpanel->getList(), FileList::ID_DIRS_FIRST);
     new FXMenuCheck(lpanelmenu, _("Re&verse order"), lpanel->getList(), FileList::ID_SORT_REVERSE);
+    new FXMenuCheck(lpanelmenu, _("Show f&olders"), lpanel->getList(), FileList::ID_HIDE_FOLDERS);
     lpanelmenutitle = new FXMenuTitle(menubar, _("&Left panel"), NULL, lpanelmenu);
 
     // Right Panel Menu
@@ -1056,6 +1061,7 @@ XFileExplorer::XFileExplorer(FXApp* app, vector_FXString URIs, const FXbool icon
     new FXMenuCheck(rpanelmenu, _("I&gnore case"), rpanel->getList(), FileList::ID_SORT_CASE);
     new FXMenuCheck(rpanelmenu, _("&Folders first"), rpanel->getList(), FileList::ID_DIRS_FIRST);
     new FXMenuCheck(rpanelmenu, _("Re&verse order"), rpanel->getList(), FileList::ID_SORT_REVERSE);
+    new FXMenuCheck(rpanelmenu, _("Show f&olders"), rpanel->getList(), FileList::ID_HIDE_FOLDERS);
     rpanelmenutitle = new FXMenuTitle(menubar, _("&Right panel"), NULL, rpanelmenu);
 
     // Tools menu
@@ -1517,6 +1523,7 @@ void XFileExplorer::saveConfig()
         getApp()->reg().writeUnsignedEntry("LEFT PANEL", "origpath_size", lpanel->getHeaderSize(9));
         getApp()->reg().writeUnsignedEntry("LEFT PANEL", "liststyle", lpanel->getListStyle());
         getApp()->reg().writeUnsignedEntry("LEFT PANEL", "hiddenfiles", lpanel->shownHiddenFiles());
+        getApp()->reg().writeUnsignedEntry("LEFT PANEL", "show_file_folders", lpanel->hiddenFolders());
         getApp()->reg().writeUnsignedEntry("LEFT PANEL", "showthumbnails", lpanel->shownThumbnails());
 
         // Get and write sort function for left panel
@@ -1685,6 +1692,7 @@ void XFileExplorer::saveConfig()
         getApp()->reg().writeUnsignedEntry("RIGHT PANEL", "origpath_size", rpanel->getHeaderSize(9));
         getApp()->reg().writeUnsignedEntry("RIGHT PANEL", "liststyle", rpanel->getListStyle());
         getApp()->reg().writeUnsignedEntry("RIGHT PANEL", "hiddenfiles", rpanel->shownHiddenFiles());
+        getApp()->reg().writeUnsignedEntry("RIGHT PANEL", "show_file_folders", rpanel->hiddenFolders());
         getApp()->reg().writeUnsignedEntry("RIGHT PANEL", "showthumbnails", rpanel->shownThumbnails());
 
         // Get and write sort function for right panel
@@ -2153,6 +2161,12 @@ void XFileExplorer::create()
     lpanel->showHiddenFiles(hiddenfiles);
     hiddenfiles = getApp()->reg().readUnsignedEntry("RIGHT PANEL", "hiddenfiles", 0);
     rpanel->showHiddenFiles(hiddenfiles);
+
+    // Show or hide hidden folders listed in panels
+    FXbool hiddenfolders = getApp()->reg().readUnsignedEntry("LEFT PANEL", "show_file_folders", 0);
+    lpanel->showFolders(hiddenfolders);
+    hiddenfolders = getApp()->reg().readUnsignedEntry("RIGHT PANEL", "show_file_folders", 0);
+    rpanel->showFolders(hiddenfolders);
 
     // Show or hide hidden directories listed in dirpanel
     FXbool hidden_dir = getApp()->reg().readUnsignedEntry("DIR PANEL", "hidden_dir", 0);

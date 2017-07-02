@@ -110,6 +110,7 @@ FXDEFMAP(PreferencesBox) PreferencesMap[] =
     FXMAPFUNC(SEL_COMMAND, PreferencesBox::ID_WHEELADJUST, PreferencesBox::onCmdWheelAdjust),
     FXMAPFUNC(SEL_COMMAND, PreferencesBox::ID_CHANGE_KEYBINDINGS, PreferencesBox::onCmdChangeKeyBindings),
     FXMAPFUNC(SEL_COMMAND, PreferencesBox::ID_RESTORE_KEYBINDINGS, PreferencesBox::onCmdRestoreKeyBindings),
+    FXMAPFUNC(SEL_COMMAND, PreferencesBox::ID_FOLDER_LIMIT_FOLDERS, PreferencesBox::onCmdHomeAndMntOnly),
     FXMAPFUNC(SEL_UPDATE, PreferencesBox::ID_STANDARD_CONTROLS, PreferencesBox::onUpdControls),
     FXMAPFUNC(SEL_UPDATE, PreferencesBox::ID_CLEARLOOKS_CONTROLS, PreferencesBox::onUpdControls),
     FXMAPFUNC(SEL_UPDATE, PreferencesBox::ID_COLOR, PreferencesBox::onUpdColor),

@@ -113,6 +113,7 @@ FXDEFMAP(FilePanel) FilePanelMap[] =
     FXMAPFUNC(SEL_COMMAND, FilePanel::ID_SHOW_MINI_ICONS, FilePanel::onCmdShow),
     FXMAPFUNC(SEL_COMMAND, FilePanel::ID_SHOW_DETAILS, FilePanel::onCmdShow),
     FXMAPFUNC(SEL_COMMAND, FilePanel::ID_TOGGLE_HIDDEN, FilePanel::onCmdToggleHidden),
+    FXMAPFUNC(SEL_COMMAND, FilePanel::ID_TOGGLE_FOLDERS, FilePanel::onCmdToggleFolders),
     FXMAPFUNC(SEL_COMMAND, FilePanel::ID_TOGGLE_THUMBNAILS, FilePanel::onCmdToggleThumbnails),
     FXMAPFUNC(SEL_COMMAND, FilePanel::ID_SELECT_ALL, FilePanel::onCmdSelect),
     FXMAPFUNC(SEL_COMMAND, FilePanel::ID_DESELECT_ALL, FilePanel::onCmdSelect),
@@ -152,6 +153,7 @@ FXDEFMAP(FilePanel) FilePanelMap[] =
     FXMAPFUNC(SEL_UPDATE, FilePanel::ID_SHOW_MINI_ICONS, FilePanel::onUpdShow),
     FXMAPFUNC(SEL_UPDATE, FilePanel::ID_SHOW_DETAILS, FilePanel::onUpdShow),
     FXMAPFUNC(SEL_UPDATE, FilePanel::ID_TOGGLE_HIDDEN, FilePanel::onUpdToggleHidden),
+    FXMAPFUNC(SEL_UPDATE, FilePanel::ID_TOGGLE_FOLDERS, FilePanel::onUpdToggleFolders),
     FXMAPFUNC(SEL_UPDATE, FilePanel::ID_TOGGLE_THUMBNAILS, FilePanel::onUpdToggleThumbnails),
     FXMAPFUNC(SEL_UPDATE, FilePanel::ID_DIR_USAGE, FilePanel::onUpdDirUsage),
 #if defined(linux)
@@ -1714,7 +1716,7 @@ long FilePanel::onCmdFileMan(FXObject* sender, FXSelector sel, void* ptr)
                 int rc = 1;
                 rc = operationdialogrename->execute(PLACEMENT_CURSOR);
                 target = operationdialogrename->getText();
-                
+
                 // Target name contains '/'
                 if (target.contains(PATHSEPCHAR))
                 {
@@ -2358,12 +2360,12 @@ long FilePanel::onCmdFileTrash(FXObject*, FXSelector, void*)
                         f->hideProgressDialog();
                         FXString msg;
                         msg.format(_("File %s is write-protected, move it anyway to trash can?"), pathname.text());
-                        
+
                         if (num ==1)
                         {
 							OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Trash"), msg, OVWBOX_SINGLE_FILE);
 							FXuint answer = dlg->execute(PLACEMENT_OWNER);
-							delete dlg;	
+							delete dlg;
 							if (answer == 1)
 							{
 								overwrite = true;
@@ -2372,7 +2374,7 @@ long FilePanel::onCmdFileTrash(FXObject*, FXSelector, void*)
 							{
 								goto end;
 							}
-						}  
+						}
                         else
                         {
 							OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Trash"), msg);
@@ -2405,7 +2407,7 @@ long FilePanel::onCmdFileTrash(FXObject*, FXSelector, void*)
 								skip_all = true;
 								break;
 							}
-							
+
 						}
                     }
                     if ((overwrite | overwrite_all) & !skip_all)
@@ -2838,13 +2840,13 @@ long FilePanel::onCmdFileDelete(FXObject*, FXSelector, void*)
                         	OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Delete"), msg, OVWBOX_SINGLE_FILE);
 							FXuint answer = dlg->execute(PLACEMENT_OWNER);
 							delete dlg;
-							
+
 							if (answer == 0)
 							{
 								goto end;
 							}
 						}
-                        
+
                         else
                         {
 							OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Delete"), msg);
@@ -2891,7 +2893,7 @@ long FilePanel::onCmdFileDelete(FXObject*, FXSelector, void*)
                         f->hideProgressDialog();
                         FXString msg;
                         msg.format(_("File %s is write-protected, delete it anyway?"), pathname.text());
-  
+
   						if (num == 1)
   						{
                         	OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Delete"), msg, OVWBOX_SINGLE_FILE);
@@ -2904,9 +2906,9 @@ long FilePanel::onCmdFileDelete(FXObject*, FXSelector, void*)
 							else
 							{
 								goto end;
-							}							
+							}
 						}
-  
+
  						else
  						{
 							OverwriteBox* dlg = new OverwriteBox(this, _("Confirm Delete"), msg);
@@ -2939,7 +2941,7 @@ long FilePanel::onCmdFileDelete(FXObject*, FXSelector, void*)
 								skip_all = true;
 								break;
 							}
-						} 
+						}
                     }
                     if ((overwrite | overwrite_all) & !skip_all)
                     {
@@ -3502,7 +3504,7 @@ long FilePanel::onCmdProperties(FXObject* sender, FXSelector, void*)
         PropertiesBox* attrdlg = new PropertiesBox(this, files, num, paths);
         attrdlg->create();
         attrdlg->show(PLACEMENT_OWNER);
-        
+
         ret = chdir(startlocation.text());
         if (ret < 0)
         {
@@ -4408,6 +4410,7 @@ long FilePanel::onCmdPopupMenu(FXObject* o, FXSelector s, void* p)
         new FXMenuCheck(menu, _("Ignore c&ase"), current->list, FileList::ID_SORT_CASE);
         new FXMenuCheck(menu, _("Fold&ers first"), current->list, FileList::ID_DIRS_FIRST);
         new FXMenuCheck(menu, _("Re&verse order"), current->list, FileList::ID_SORT_REVERSE);
+        new FXMenuCheck(menu, _("Show f&olders"), current->list, FileList::ID_HIDE_FOLDERS);
     }
     // Non empty selection
     else
@@ -4452,6 +4455,7 @@ long FilePanel::onCmdPopupMenu(FXObject* o, FXSelector s, void* p)
         new FXMenuCheck(submenu, _("Fold&ers first"), current->list, FileList::ID_DIRS_FIRST);
         new FXMenuCheck(submenu, _("Re&verse order"), current->list, FileList::ID_SORT_REVERSE);
         new FXMenuCascade(menu, _("Pane&l"), NULL, submenu);
+        new FXMenuCheck(menu, _("Show f&olders"), current->list, FileList::ID_HIDE_FOLDERS);
         new FXMenuSeparator(menu);
 
 #if defined(linux)
@@ -5449,7 +5453,7 @@ long FilePanel::onCmdRefresh(FXObject*, FXSelector, void*)
     list->setDirectory(ROOTDIR, false);
     list->setDirectory(dir, false);
     updatePath();
-	
+
 	// Focus on current panel
 	current-> list->setFocus();
 
@@ -5561,6 +5565,27 @@ long FilePanel::onUpdToggleHidden(FXObject* sender, FXSelector sel, void* ptr)
     return(1);
 }
 
+// Handle toggle folders command
+long FilePanel::onCmdToggleFolders(FXObject* sender, FXSelector sel, void* ptr)
+{
+    current->list->handle(sender, FXSEL(SEL_COMMAND, FileList::ID_TOGGLE_FOLDERS), ptr);
+    return(1);
+}
+
+
+// Update toggle folders command
+long FilePanel::onUpdToggleFolders(FXObject* sender, FXSelector sel, void* ptr)
+{
+    FXuint msg = FXWindow::ID_UNCHECK;
+    FXbool hidden = current->list->hiddenFolders();
+
+    if (hidden == false)
+    {
+        msg = FXWindow::ID_CHECK;
+    }
+    sender->handle(this, FXSEL(SEL_COMMAND, msg), ptr);
+    return(1);
+}
 
 // Handle toggle thumbnails command
 long FilePanel::onCmdToggleThumbnails(FXObject* sender, FXSelector sel, void* ptr)

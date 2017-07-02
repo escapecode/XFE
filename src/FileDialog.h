@@ -202,11 +202,17 @@ public:
     // Return true if hidden files are shown
     FXbool shownHiddenFiles() const;
 
+    // Return true if hidden folders are shown
+    FXbool hiddenFolders() const;
+
     // Return true if thumbnails are shown
     FXbool shownThumbnails() const;
 
     // Change show hidden files mode
     void showHiddenFiles(FXbool shown);
+
+    // Change show hidden folders mode
+    void showFolders(FXbool shown);
 
     // Change show thumbnails files mode
     void showThumbnails(FXbool shown);
@@ -317,11 +323,17 @@ public:
     // Return true if hidden files are shown
     FXbool shownHiddenFiles() const;
 
+    // Return true if hidden folderrs are shown
+    FXbool hiddenFolders() const;
+
     // Return true if thumbnails are shown
     FXbool shownThumbnails() const;
 
     // Change show hidden files mode
     void showHiddenFiles(FXbool shown);
+
+    // Change show hidden folders mode
+    void showFolders(FXbool shown);
 
     // Change show thumbnails files mode
     void showThumbnails(FXbool shown);

@@ -94,7 +94,7 @@ FileSelector::FileSelector(FXComposite* p, FXObject* tgt, FXSelector sel, FXuint
         options = _ICONLIST_MINI_ICONS|_ICONLIST_BROWSESELECT|LAYOUT_FILL_X|LAYOUT_FILL_Y|SCROLLERS_DONT_TRACK;
     }
     FXbool showthumbnails = getApp()->reg().readUnsignedEntry("FILEDIALOG", "showthumbnails", false);
- 
+
     list = new FileList(this, cont, this, ID_FILELIST, showthumbnails, options);
 
     // Set list colors and columns size for detailed mode
@@ -111,9 +111,11 @@ FileSelector::FileSelector(FXComposite* p, FXObject* tgt, FXSelector sel, FXuint
 
     // Set file selector options
     FXuint liststyle = getApp()->reg().readUnsignedEntry("FILEDIALOG", "liststyle", _ICONLIST_MINI_ICONS);
+    setFileBoxStyle(liststyle);
     FXbool hiddenfiles = getApp()->reg().readUnsignedEntry("FILEDIALOG", "hiddenfiles", false);
     showHiddenFiles(hiddenfiles);
-    setFileBoxStyle(liststyle);
+    FXbool show_file_folders = getApp()->reg().readUnsignedEntry("FILEDIALOG", "show_file_folders", false);
+    showFolders(show_file_folders);
 
     // Entry buttons
     FXMatrix* fields = new FXMatrix(cont, 3, MATRIX_BY_COLUMNS|LAYOUT_SIDE_BOTTOM|LAYOUT_FILL_X);
@@ -1520,6 +1522,17 @@ void FileSelector::showHiddenFiles(FXbool shown)
     list->showHiddenFiles(shown);
 }
 
+// Change show hidden folders mode
+void FileSelector::showFolders(FXbool shown)
+{
+    list->showFolders(shown);
+}
+
+// Return true if hidden files are displayed
+FXbool FileSelector::hiddenFolders() const
+{
+    return(list->hiddenFolders());
+}
 
 // Change show thumbnails files mode
 void FileSelector::showThumbnails(FXbool shown)
@@ -1542,6 +1555,7 @@ FileSelector::~FileSelector()
     getApp()->reg().writeUnsignedEntry("FILEDIALOG", "attr_size", list->getHeaderSize(7));
     getApp()->reg().writeUnsignedEntry("FILEDIALOG", "liststyle", getFileBoxStyle());
     getApp()->reg().writeUnsignedEntry("FILEDIALOG", "hiddenfiles", shownHiddenFiles());
+    getApp()->reg().writeUnsignedEntry("FILEDIALOG", "show_file_folders", hiddenFolders());
     getApp()->reg().writeUnsignedEntry("FILEDIALOG", "showthumbnails", shownThumbnails());
     getApp()->reg().write();
 
@@ -1583,6 +1597,7 @@ long FileSelector::onCmdPopupMenu(FXObject* o, FXSelector s, void* p)
     new FXMenuCommand(&menu, _("New f&older..."), newfoldericon, this, ID_NEWDIR);
     new FXMenuSeparator(&menu);
     new FXMenuCheck(&menu, _("&Hidden files"), list, FileList::ID_TOGGLE_HIDDEN);
+    new FXMenuCheck(&menu, _("Hidden folders"), list, FileList::ID_TOGGLE_FOLDERS);
     new FXMenuCheck(&menu, _("Thum&bnails"), list, FileList::ID_TOGGLE_THUMBNAILS);
     new FXMenuSeparator(&menu);
     new FXMenuRadio(&menu, _("B&ig icons"), list, IconList::ID_SHOW_BIG_ICONS);
@@ -1605,6 +1620,7 @@ long FileSelector::onCmdPopupMenu(FXObject* o, FXSelector s, void* p)
     new FXMenuCheck(&menu, _("Ignore c&ase"), list, FileList::ID_SORT_CASE);
     new FXMenuCheck(&menu, _("Fold&ers first"), list, FileList::ID_DIRS_FIRST);
     new FXMenuCheck(&menu, _("Re&verse order"), list, FileList::ID_SORT_REVERSE);
+    new FXMenuCheck(&menu, _("Show f&olders"), list, FileList::ID_HIDE_FOLDERS);
 
     menu.create();
     allowPopupScroll = true;  // Allow keyboard scrolling
@@ -1850,6 +1866,11 @@ FXbool FileDialog::shownHiddenFiles() const
     return(list->shownHiddenFiles());
 }
 
+// Return true if hidden folders are displayed
+FXbool FileDialog::hiddenFolders() const
+{
+    return(list->hiddenFolders());
+}
 
 // Change show hidden files mode
 void FileDialog::showHiddenFiles(FXbool shown)

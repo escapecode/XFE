@@ -70,6 +70,7 @@ private:
     FXTextField*   textfont;
     FXTextField*   mountcmd;
     FXTextField*   umountcmd;
+    FXTextField*   folders;
     FXTextField*   thumbnail_big;
     FXTextField*   thumbnail_small;
     FXString       oldiconpath;
@@ -77,8 +78,8 @@ private:
     FXString       oldtxteditor;
     FXString       oldfilecomparator;
     FXString       oldtimeformat;
-    FXString       oldimgviewer;
     FXString       oldfolders;
+    FXString       oldimgviewer;
     FXString       oldxterm;
     FXString       oldnormalfont;
     FXString       oldtextfont;

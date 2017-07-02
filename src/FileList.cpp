@@ -104,6 +104,9 @@ FXDEFMAP(FileList) FileListMap[] =
     FXMAPFUNC(SEL_COMMAND, FileList::ID_TOGGLE_THUMBNAILS, FileList::onCmdToggleThumbnails),
     FXMAPFUNC(SEL_COMMAND, FileList::ID_HEADER_CHANGE, FileList::onCmdHeader),
     FXMAPFUNC(SEL_COMMAND, FileList::ID_REFRESH, FileList::onCmdRefresh),
+    FXMAPFUNC(SEL_COMMAND, FileList::ID_SHOW_FOLDERS, FileList::onCmdShowFolders),
+    FXMAPFUNC(SEL_COMMAND, FileList::ID_HIDE_FOLDERS, FileList::onCmdHideFolders),
+    FXMAPFUNC(SEL_COMMAND, FileList::ID_TOGGLE_FOLDERS, FileList::onCmdToggleFolders),
     FXMAPFUNC(SEL_UPDATE, FileList::ID_HEADER_CHANGE, FileList::onUpdHeader),
     FXMAPFUNC(SEL_UPDATE, FileList::ID_DIRECTORY_UP, FileList::onUpdDirectoryUp),
     FXMAPFUNC(SEL_UPDATE, FileList::ID_SORT_BY_NAME, FileList::onUpdSortByName),
@@ -126,6 +129,9 @@ FXDEFMAP(FileList) FileListMap[] =
     FXMAPFUNC(SEL_UPDATE, FileList::ID_TOGGLE_HIDDEN, FileList::onUpdToggleHidden),
     FXMAPFUNC(SEL_UPDATE, FileList::ID_TOGGLE_THUMBNAILS, FileList::onUpdToggleThumbnails),
     FXMAPFUNC(SEL_UPDATE, 0, FileList::onUpdRefreshTimer),
+    FXMAPFUNC(SEL_UPDATE, FileList::ID_SHOW_FOLDERS, FileList::onUpdShowFolders),
+    FXMAPFUNC(SEL_UPDATE, FileList::ID_HIDE_FOLDERS, FileList::onUpdHideFolders),
+    FXMAPFUNC(SEL_UPDATE, FileList::ID_TOGGLE_FOLDERS, FileList::onUpdToggleFolders),
 };
 
 
@@ -957,6 +963,12 @@ long FileList::onCmdToggleHidden(FXObject*, FXSelector, void*)
     return(1);
 }
 
+// Toggle hidden folders display
+long FileList::onCmdToggleFolders(FXObject*, FXSelector, void*)
+{
+    showHiddenFiles(!hiddenFolders());
+    return(1);
+}
 
 // Toggle thumbnails display
 long FileList::onCmdToggleThumbnails(FXObject*, FXSelector, void*)
@@ -1041,6 +1053,78 @@ long FileList::onUpdHideHidden(FXObject* sender, FXSelector, void*)
     return(1);
 }
 
+// Update toggle hidden folders button
+long FileList::onUpdToggleFolders(FXObject* sender, FXSelector, void*)
+{
+	printf("onUpdToggleFolders %i\n", hiddenFolders());
+    if (hiddenFolders())
+    {
+        sender->handle(this, FXSEL(SEL_COMMAND, ID_CHECK), NULL);
+    }
+    else
+    {
+        sender->handle(this, FXSEL(SEL_COMMAND, ID_UNCHECK), NULL);
+    }
+    return(1);
+}
+
+// Show hidden files
+long FileList::onCmdShowFolders(FXObject*, FXSelector, void*)
+{
+	printf("onCmdShowFolders %i\n", hiddenFolders());
+    showFolders(false);
+    return(1);
+}
+
+
+// Update show hidden files widget
+long FileList::onUpdShowFolders(FXObject* sender, FXSelector, void*)
+{
+	printf("onUpdShowFolders %i\n", hiddenFolders());
+    if (hiddenFolders())
+    {
+        sender->handle(this, FXSEL(SEL_COMMAND, ID_CHECK), NULL);
+    }
+    else
+    {
+        sender->handle(this, FXSEL(SEL_COMMAND, ID_UNCHECK), NULL);
+    }
+    return(1);
+}
+
+
+// Hide hidden files
+long FileList::onCmdHideFolders(FXObject*, FXSelector, void*)
+{
+	// the code below is a hack because onCmdToggleFolders is not being triggered
+    if (! hiddenFolders())
+    {
+		showFolders(true);
+        //sender->handle(this, FXSEL(SEL_COMMAND, ID_CHECK), NULL);
+    }
+    else
+    {
+		showFolders(false);
+        //sender->handle(this, FXSEL(SEL_COMMAND, ID_UNCHECK), NULL);
+    }
+    return(1);
+}
+
+
+// Update hide hidden files widget
+long FileList::onUpdHideFolders(FXObject* sender, FXSelector, void*)
+{
+	//printf("onUpdHideFolders %i\n", hiddenFolders());
+    if (!hiddenFolders())
+    {
+        sender->handle(this, FXSEL(SEL_COMMAND, ID_CHECK), NULL);
+    }
+    else
+    {
+        sender->handle(this, FXSEL(SEL_COMMAND, ID_UNCHECK), NULL);
+    }
+    return(1);
+}
 
 // Move up one level
 long FileList::onCmdDirectoryUp(FXObject*, FXSelector, void*)
@@ -3814,6 +3898,26 @@ void FileList::showHiddenFiles(FXbool shown)
     setFocus();
 }
 
+void FileList::showFolders(FXbool shown)
+{
+    FXuint opts = shown ? (options|_FILELIST_SHOWFOLDERS) : (options&~_FILELIST_SHOWFOLDERS);
+
+    printf("showfolders %i %i %i\n", shown, options, opts);
+
+    if (opts != options)
+    {
+		printf(" scan\n");
+        options = opts;
+        scan(true);
+    }
+    setFocus();
+}
+
+// Return true if showing hidden files
+FXbool FileList::hiddenFolders() const
+{
+    return((options&_FILELIST_SHOWFOLDERS) != 0);
+}
 
 // Return true if showing thumbnails
 FXbool FileList::shownThumbnails() const
@@ -4758,6 +4862,11 @@ void FileList::listItems(FXbool force)
                     {
                         isLinkToDir = true;
                     }
+                }
+
+                if (hiddenFolders() && (isLinkToDir || S_ISDIR(linfo.st_mode) || isBrokenLink))
+                {
+                    continue;
                 }
 
                 // If not a directory, nor a link to a directory and we want only directories, skip it
