@@ -41,7 +41,7 @@ OverwriteBox::OverwriteBox(FXWindow* win, const FXString& name, const FXString& 
     new FXLabel(info, str, NULL, JUSTIFY_LEFT|ICON_BEFORE_TEXT|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|LAYOUT_FILL_Y);
 
     FXHorizontalFrame* buttons = new FXHorizontalFrame(content, LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH, 0, 0, 0, 0, 10, 10, 10, 10);
-	
+
 	// Dialog with five options for multiple files
 	if (type == OVWBOX_MULTIPLE_FILES)
 	{
@@ -51,7 +51,7 @@ OverwriteBox::OverwriteBox(FXWindow* win, const FXString& name, const FXString& 
 		new FXButton(buttons, _("&Yes"), NULL, this, ID_CLICKED_OVERWRITE, BUTTON_DEFAULT|FRAME_RAISED|FRAME_THICK|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_CENTER_X, 0, 0, 0, 0, HORZ_PAD, HORZ_PAD, VERT_PAD, VERT_PAD);
 		new FXButton(buttons, _("Yes for &All"), NULL, this, ID_CLICKED_OVERWRITE_ALL, BUTTON_DEFAULT|FRAME_RAISED|FRAME_THICK|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_CENTER_X, 0, 0, 0, 0, HORZ_PAD, HORZ_PAD, VERT_PAD, VERT_PAD);
 	}
-	
+
 	// Dialog with two options for single file
 	else
 	{
@@ -62,7 +62,7 @@ OverwriteBox::OverwriteBox(FXWindow* win, const FXString& name, const FXString& 
 
 
 // Create message box with text, source and target size, source and target modified time
-OverwriteBox::OverwriteBox(FXWindow* win, const FXString& name, const FXString& text, FXString& srcsize, FXString& srcmtime, FXString& tgtsize, FXString& tgtmtime, FXuint type, FXuint opts, int x, int y) :
+OverwriteBox::OverwriteBox(FXWindow* win, const FXString& name, const FXString& text, FXString& srcsize, FXString& srcmtime, FXString& tgtsize, FXString& tgtmtime, FXString& md5match, FXuint type, FXuint opts, int x, int y) :
     DialogBox(win, name, opts|DECOR_TITLE|DECOR_BORDER|DECOR_RESIZE|DECOR_CLOSE, x, y, 0, 0)
 {
     FXVerticalFrame* content = new FXVerticalFrame(this, LAYOUT_FILL_X|LAYOUT_FILL_Y);
@@ -89,6 +89,9 @@ OverwriteBox::OverwriteBox(FXWindow* win, const FXString& name, const FXString& 
     new FXLabel(matrix, tgtsize, NULL, JUSTIFY_LEFT|ICON_BEFORE_TEXT|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|LAYOUT_FILL_Y);
     new FXLabel(matrix, _("- Modified date:"), NULL, JUSTIFY_LEFT|ICON_BEFORE_TEXT|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|LAYOUT_FILL_Y);
     new FXLabel(matrix, tgtmtime, NULL, JUSTIFY_LEFT|ICON_BEFORE_TEXT|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|LAYOUT_FILL_Y);
+
+   new FXVerticalSeparator(matrix, SEPARATOR_NONE|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|LAYOUT_CENTER_Y, 0, 0, 0, 0, 0, 40);
+    new FXLabel(matrix, md5match, NULL, JUSTIFY_LEFT|ICON_BEFORE_TEXT|LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|LAYOUT_FILL_Y);
 
     FXHorizontalFrame* buttons = new FXHorizontalFrame(content, LAYOUT_TOP|LAYOUT_LEFT|LAYOUT_FILL_X|PACK_UNIFORM_WIDTH, 0, 0, 0, 0, 10, 10, 10, 10);
 

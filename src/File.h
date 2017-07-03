@@ -7,7 +7,6 @@
 #include "OverwriteBox.h"
 #include "MessageBox.h"
 
-
 // File operations
 enum
 {
@@ -38,6 +37,9 @@ struct inodelist
 
 class File : public DialogBox
 {
+	FXString error_msg;
+	FXbool no_repeat_same_error;
+
     FXDECLARE(File)
 
 private:
@@ -75,7 +77,7 @@ protected:
     int copydir(const FXString& source, const FXString& target, struct stat& parentstatus, inodelist* inodes, const FXbool preserve_date);
     int rchmod(char* path, char* file, mode_t mode, const FXbool dironly, const FXbool fileonly);
     int rchown(char* path, char* file, uid_t uid, gid_t gid, const FXbool dironly, const FXbool fileonly);
-
+	int filesCompare(FXString filename1, FXString filename2);
     FXLabel*       uplabel;
     FXLabel*       downlabel;
     FXString       datatext;

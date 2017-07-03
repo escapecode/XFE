@@ -1056,7 +1056,6 @@ long FileList::onUpdHideHidden(FXObject* sender, FXSelector, void*)
 // Update toggle hidden folders button
 long FileList::onUpdToggleFolders(FXObject* sender, FXSelector, void*)
 {
-	printf("onUpdToggleFolders %i\n", hiddenFolders());
     if (hiddenFolders())
     {
         sender->handle(this, FXSEL(SEL_COMMAND, ID_CHECK), NULL);

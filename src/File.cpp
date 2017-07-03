@@ -207,7 +207,7 @@ File::File(FXWindow* owner, FXString title, const FXuint operation, const FXuint
 
 	// Number of selected items
 	numsel = num;
-	
+
     // Error message box
     mbox = new MessageBox(ownerwin, _("Error"), "", errorbigicon, BOX_OK_CANCEL|DECOR_TITLE|DECOR_BORDER);
 }
@@ -294,6 +294,7 @@ FXuint File::getOverwriteAnswer(FXString srcpath, FXString tgtpath)
 {
     // Message string
     FXString msg;
+	FXString msg_file_content_matching;
 
     if (::isDirectory(tgtpath))
     {
@@ -309,6 +310,7 @@ FXuint File::getOverwriteAnswer(FXString srcpath, FXString tgtpath)
 
     // Get the size and mtime of the source and target
     struct stat linfo;
+    struct stat rinfo;
     FXString    srcsize, srcmtime, tgtsize, tgtmtime;
     FXbool      statsrc = false, stattgt = false;
     if (lstatrep(srcpath.text(), &linfo) == 0)
@@ -373,17 +375,38 @@ FXuint File::getOverwriteAnswer(FXString srcpath, FXString tgtpath)
         tgtsize = ::hSize(buf);
     }
 
+    msg_file_content_matching = "";
+
+    if (lstatrep(srcpath.text(), &linfo) == 0 && lstatrep(tgtpath.text(), &rinfo) == 0)
+    {
+		if (linfo.st_size < 10000000 && rinfo.st_size < 10000000)
+		{
+			if (File::filesCompare(srcpath, tgtpath))
+			{
+				msg_file_content_matching = "file content matches";
+			}
+			else
+			{
+				msg_file_content_matching = "files contents do NOT match";
+			}
+		}
+		else
+		{
+			msg_file_content_matching = "files larger than 10MB, so file contents not being compared to verify matching";
+		}
+	}
+
     // Overwrite dialog
     OverwriteBox* dlg;
     if (statsrc && stattgt)
     {
         if (numsel == 1)
         {
-	        dlg = new OverwriteBox(ownerwin, _("Confirm Overwrite"), msg, srcsize, srcmtime, tgtsize, tgtmtime, OVWBOX_SINGLE_FILE);
+	        dlg = new OverwriteBox(ownerwin, _("Confirm Overwrite"), msg, srcsize, srcmtime, tgtsize, tgtmtime, msg_file_content_matching, OVWBOX_SINGLE_FILE);
 		}
 		else
 		{
-	        dlg = new OverwriteBox(ownerwin, _("Confirm Overwrite"), msg, srcsize, srcmtime, tgtsize, tgtmtime);
+	        dlg = new OverwriteBox(ownerwin, _("Confirm Overwrite"), msg, srcsize, srcmtime, tgtsize, tgtmtime, msg_file_content_matching);
 		}
     }
     else
@@ -2001,7 +2024,7 @@ int File::archive(const FXString name, const FXString cmd)
 		delete dlg;
 		if (answer == 0)
 		{
-			return(false);				
+			return(false);
 		}
     }
 
@@ -2139,4 +2162,35 @@ long File::onTimeout(FXObject*, FXSelector, void*)
     getApp()->forceRefresh();
     getApp()->flush();
     return(1);
+}
+
+int File::filesCompare(FXString filename1, FXString filename2)
+{
+	FILE * file1;
+	FILE * file2;
+
+	file1 = fopen ( filename1.text(), "rb" );
+	file2 = fopen ( filename2.text(), "rb" );
+
+    int diff = 0;
+    int N = 65536;
+    char* b1 = (char*) calloc (1, N+1);
+    char* b2 = (char*) calloc (1, N+1);
+    size_t s1, s2;
+
+    do {
+        s1 = fread(b1, 1, N, file1);
+        s2 = fread(b2, 1, N, file2);
+
+        if (s1 != s2 || memcmp(b1, b2, s1)) {
+            diff = 1;
+            break;
+        }
+      } while (!feof(file1) || !feof(file2));
+
+    free(b1);
+    free(b2);
+
+    if (diff) return 0;
+    else return 1;
 }
