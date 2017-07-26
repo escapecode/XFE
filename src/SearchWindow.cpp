@@ -65,7 +65,7 @@ SearchWindow::SearchWindow(FXApp* app, const FXString& name, FXuint opts, int x,
     searchframe = new FXVerticalFrame(frame1, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X);
 
     // Label and input field
-    FXMatrix* matrix1 = new FXMatrix(searchframe, 4, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y);
+    FXMatrix* matrix1 = new FXMatrix(searchframe, 7, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y);
     new FXLabel(matrix1, _("Find files:"), NULL, LAYOUT_LEFT|LAYOUT_CENTER_Y|LAYOUT_FILL_ROW);
     findfile = new FXTextField(matrix1, 40, 0, 0, LAYOUT_CENTER_Y|LAYOUT_CENTER_X|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
 
@@ -78,10 +78,10 @@ SearchWindow::SearchWindow(FXApp* app, const FXString& name, FXuint opts, int x,
     FXuint hidden = getApp()->reg().readUnsignedEntry("SEARCH PANEL", "find_hidden", 0);
     findhidden->setCheck(hidden);
 
-    FXMatrix* matrix2 = new FXMatrix(searchframe, 3, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y);
-    new FXLabel(matrix2, _("In folder:"), NULL, LAYOUT_LEFT|LAYOUT_CENTER_Y|LAYOUT_FILL_ROW);
-    wheredir = new FXTextField(matrix2, 40, 0, 0, LAYOUT_CENTER_Y|LAYOUT_CENTER_X|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
-    dirbutton = new FXButton(matrix2, _("\tIn folder..."), filedialogicon, this, ID_BROWSE_PATH, FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT|LAYOUT_CENTER_Y, 0, 0, 0, 0, 20, 20);
+    //FXMatrix* matrix2 = new FXMatrix(searchframe, 3, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y);
+    new FXLabel(matrix1, _("In folder:"), NULL, LAYOUT_LEFT|LAYOUT_CENTER_Y|LAYOUT_FILL_ROW);
+    wheredir = new FXTextField(matrix1, 40, 0, 0, LAYOUT_CENTER_Y|LAYOUT_CENTER_X|FRAME_SUNKEN|FRAME_THICK|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
+    dirbutton = new FXButton(matrix1, _("\tIn folder..."), filedialogicon, this, ID_BROWSE_PATH, FRAME_RAISED|FRAME_THICK|LAYOUT_RIGHT|LAYOUT_CENTER_Y, 0, 0, 0, 0, 20, 20);
 
     FXMatrix* matrix3 = new FXMatrix(searchframe, 3, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_X|LAYOUT_FILL_Y);
     new FXLabel(matrix3, _("Text contains:"), NULL, LAYOUT_LEFT|LAYOUT_CENTER_Y|LAYOUT_FILL_ROW);
@@ -94,7 +94,6 @@ SearchWindow::SearchWindow(FXApp* app, const FXString& name, FXuint opts, int x,
     // Search options
     moreoptions = new FXCheckButton(searchframe, _("More options"), this, ID_MORE_OPTIONS, CHECKBUTTON_PLUS|JUSTIFY_NORMAL|ICON_BEFORE_TEXT|LAYOUT_CENTER_Y);
     moregroup = new FXGroupBox(searchframe, _("Search options"), GROUPBOX_TITLE_LEFT|FRAME_GROOVE|LAYOUT_FILL_X);
-    resetoptions = new FXButton(moregroup, _("Reset\tReset search options"), NULL, this, SearchWindow::ID_RESET_OPTIONS, FRAME_RAISED|LAYOUT_TOP|LAYOUT_LEFT);
 
     FXbool moreopts = getApp()->reg().readUnsignedEntry("SEARCH PANEL", "moreoptions", 0);
     if (moreopts)
@@ -191,24 +190,29 @@ SearchWindow::SearchWindow(FXApp* app, const FXString& name, FXuint opts, int x,
     perm->setNumColumns(4);
     permbtn = new FXCheckButton(matrix4, _("\tFilter by permissions (octal)"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
 
+
+    FXMatrix* matrix5 = new FXMatrix(moregroup, 13, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP, 0, 0, 0, 0, 4, 4, 4, 8, 4, 8);
     // Empty files
-    new FXLabel(matrix4, _("Empty files:"), NULL, JUSTIFY_LEFT);
-    emptybtn = new FXCheckButton(matrix4, _("\tEmpty files only"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    emptybtn = new FXCheckButton(matrix5, _("\tEmpty files only"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    new FXLabel(matrix5, _("Empty files"), NULL, JUSTIFY_LEFT);
 
     // Follow symlinks
-    new FXLabel(matrix4, "", NULL, JUSTIFY_LEFT);
-    new FXLabel(matrix4, _("Follow symbolic links:"), NULL, JUSTIFY_LEFT);
-    linkbtn = new FXCheckButton(matrix4, _("\tSearch while following symbolic links"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    new FXLabel(matrix5, "    ", NULL, JUSTIFY_LEFT);
+    linkbtn = new FXCheckButton(matrix5, _("\tSearch while following symbolic links"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    new FXLabel(matrix5, _("Follow symbolic links"), NULL, JUSTIFY_LEFT);
 
     // Non recursive
-    new FXLabel(matrix4, "", NULL, JUSTIFY_LEFT);
-    new FXLabel(matrix4, _("Non recursive:"), NULL, JUSTIFY_LEFT);
-    norecbtn = new FXCheckButton(matrix4, _("\tDon't search folders recursively"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    new FXLabel(matrix5, "    ", NULL, JUSTIFY_LEFT);
+    norecbtn = new FXCheckButton(matrix5, _("\tDon't search folders recursively"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    new FXLabel(matrix5, _("Non recursive"), NULL, JUSTIFY_LEFT);
 
     // Don't search in other file systems
-    new FXLabel(matrix4, "", NULL, JUSTIFY_LEFT);
-    new FXLabel(matrix4, _("Ignore other file systems:"), NULL, JUSTIFY_LEFT);
-    nofsbtn = new FXCheckButton(matrix4, _("\tDon't search in other file systems"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    new FXLabel(matrix5, "    ", NULL, JUSTIFY_LEFT);
+    nofsbtn = new FXCheckButton(matrix5, _("\tDon't search in other file systems"), NULL, 0, JUSTIFY_LEFT|LAYOUT_CENTER_Y);
+    new FXLabel(matrix5, _("Ignore other file systems"), NULL, JUSTIFY_LEFT);
+
+    new FXLabel(matrix5, "    ", NULL, JUSTIFY_LEFT);
+    resetoptions = new FXButton(matrix5, _("Reset\tReset search options"), NULL, this, SearchWindow::ID_RESET_OPTIONS, FRAME_RAISED|LAYOUT_TOP|LAYOUT_RIGHT);
 
     // Search results
     FXHorizontalFrame* frame2 = new FXHorizontalFrame(frame1, LAYOUT_SIDE_TOP|FRAME_NONE|LAYOUT_FILL_X, 0, 0, 0, 0, 0, 0, 0, 0);
