@@ -1727,38 +1727,42 @@ void DirList::listChildItems(DirItem* par)
 
             if (getApp()->reg().readUnsignedEntry("OPTIONS", "folder_limit", false) == true)
            {
-			   // TODO use folders
-			   if (false)
-			   {
-				   // if (streq(getApp()->reg().readStringEntry("OPTIONS", "folder_limit_folders", ""), ""))
-				}
-				else
+				FXString homedir = FXSystem::getHomeDirectory();
+				FXString current_path_and_name = (directory == "/") ? "" : directory;
+				current_path_and_name += "/" + name;
+
+				bool bypass = true;
+				FXString settings_folder_paths = getApp()->reg().readStringEntry("OPTIONS", "folder_limit_folders", "/mnt:/media");
+				settings_folder_paths = (streq(settings_folder_paths.text(), "")) ? "/mnt:/media" : settings_folder_paths;
+				FXString settings_folder_path = "";
+				FXString slash = "/"; // TODO:  make this OS adaptable since Windwos uses backslash
+				FXString current_path1 = current_path_and_name + slash;
+				for (int x=0; x <= settings_folder_paths.contains(":"); x++)
 				{
-					FXString homedir = FXSystem::getHomeDirectory();
-					FXString current_path_and_name = (directory == "/") ? "" : directory;
-					current_path_and_name += "/" + name;
+					settings_folder_path = settings_folder_paths.section(":", x);
+					settings_folder_path = settings_folder_path.append(slash.text());
 
-					bool bypass = true;
-					FXString folder_paths = getApp()->reg().readStringEntry("OPTIONS", "folder_limit_folders", "/mnt:/media");
-					folder_paths = (streq(folder_paths.text(), "")) ? "/mnt:/media" : folder_paths;
-					FXString this_folder = "";
-					for (int x=0; x <= folder_paths.contains(":"); x++)
-					{
-						this_folder = folder_paths.section(":", x);
-						if (streq(current_path_and_name.left(this_folder.length()).text(), this_folder.text()))
-						{
-							bypass = false;
-						}
-					}
+					settings_folder_path.left(current_path_and_name.length()).text();
 
-					if (
-						bypass == true
-						&& ! streq(homedir.left(current_path_and_name.length()).text(), current_path_and_name.text())
-						&& ! streq(current_path_and_name.left(homedir.length()).text(), homedir.text())
-					)
+					if (streq(
+							current_path1.text(),
+							settings_folder_path.left(current_path1.length()).text())
+						||
+						streq(
+							settings_folder_path.text(),
+							current_path1.left(settings_folder_path.length()).text()))
 					{
-						continue;
+						bypass = false;
 					}
+				}
+
+				if (
+					bypass == true
+					&& ! streq(homedir.left(current_path_and_name.length()).text(), current_path_and_name.text())
+					&& ! streq(current_path_and_name.left(homedir.length()).text(), homedir.text())
+				)
+				{
+					continue;
 				}
 			}
 
