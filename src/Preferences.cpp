@@ -1237,7 +1237,7 @@ long PreferencesBox::onCmdAccept(FXObject* o, FXSelector s, void* p)
     // Icon size has changed
     if (icon_size_prev != icon_size->getText())
     {
-        getApp()->reg().writeStringEntry("SETTINGS", "icon_size", iconpath->getText().text());
+        getApp()->reg().writeStringEntry("OPTIONS", "icon_size", icon_size->getText().text());
         getApp()->reg().write();
         restart_icon_size = true;
     }
