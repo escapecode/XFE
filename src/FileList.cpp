@@ -4538,18 +4538,18 @@ FXbool FileList::updateItems(FXbool force)
                     register FXuint h = bigthumb->getHeight();
 
                     // Eventually scale the big icon (best quality)
-                    FXuint max_mini_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_mini_thumb_size", "20"));
-                    FXuint max_big_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_big_thumb_size", "160"));
+                    FXuint thumb_small = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "thumb_small", "20"));
+                    FXuint thumb_big = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "thumb_big", "160"));
 
-                    if ((w > max_big_thumb_size) || (h > max_big_thumb_size))
+                    if ((w > thumb_big) || (h > thumb_big))
                     {
                         if (w > h)
                         {
-                            bigthumb->scale(max_big_thumb_size, (max_big_thumb_size*h)/w, 1);
+                            bigthumb->scale(thumb_big, (thumb_big*h)/w, 1);
                         }
                         else
                         {
-                            bigthumb->scale((max_big_thumb_size*w)/h, max_big_thumb_size, 1);
+                            bigthumb->scale((thumb_big*w)/h, thumb_big, 1);
                         }
 
                         // Size has changed
@@ -4569,15 +4569,15 @@ FXbool FileList::updateItems(FXbool force)
                     // Eventually scale the mini icon (best quality)
                     w = minithumb->getWidth();
                     h = minithumb->getHeight();
-                    if ((w > max_mini_thumb_size) || (h > max_mini_thumb_size))
+                    if ((w > thumb_small) || (h > thumb_small))
                     {
                         if (w > h)
                         {
-                            minithumb->scale(max_mini_thumb_size, (max_mini_thumb_size*h)/w, 1);
+                            minithumb->scale(thumb_small, (thumb_small*h)/w, 1);
                         }
                         else
                         {
-                            minithumb->scale((max_mini_thumb_size*w)/h, max_mini_thumb_size, 1);
+                            minithumb->scale((thumb_small*w)/h, thumb_small, 1);
                         }
                     }
 
@@ -5313,9 +5313,9 @@ fnd:
                     // Attempt to load thumbnails for image files
                     if (displaythumbnails)
                     {
-						 FXuint max_mini_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_mini_thumb_size", "20"));
-						 FXuint max_big_thumb_size = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "max_big_thumb_size", "160"));
-						 // printf("thumb %i, %i\n", max_mini_thumb_size, max_big_thumb_size);
+						 FXuint thumb_small = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "thumb_small", "20"));
+						 FXuint thumb_big = FXIntVal(getApp()->reg().readStringEntry("OPTIONS", "thumb_big", "160"));
+						 // printf("thumb %i, %i\n", thumb_small, thumb_big);
 
                         // Load big icon from file
                         bigthumb = NULL;
@@ -5335,15 +5335,15 @@ fnd:
                             register FXuint h = bigthumb->getHeight();
 
                             // Eventually scale the big icon (best quality)
-                            if ((w > max_big_thumb_size) || (h > max_big_thumb_size))
+                            if ((w > thumb_big) || (h > thumb_big))
                             {
                                 if (w > h)
                                 {
-                                    bigthumb->scale(max_big_thumb_size, (max_big_thumb_size*h)/w, 1);
+                                    bigthumb->scale(thumb_big, (thumb_big*h)/w, 1);
                                 }
                                 else
                                 {
-                                    bigthumb->scale((max_big_thumb_size*w)/h, max_big_thumb_size, 1);
+                                    bigthumb->scale((thumb_big*w)/h, thumb_big, 1);
                                 }
 
                                 // Size has changed
@@ -5363,15 +5363,15 @@ fnd:
                             // Eventually scale the mini icon (best quality)
                             w = minithumb->getWidth();
                             h = minithumb->getHeight();
-                            if ((w > max_mini_thumb_size) || (h > max_mini_thumb_size))
+                            if ((w > thumb_small) || (h > thumb_small))
                             {
                                 if (w > h)
                                 {
-                                    minithumb->scale(max_mini_thumb_size, (max_mini_thumb_size*h)/w, 1);
+                                    minithumb->scale(thumb_small, (thumb_small*h)/w, 1);
                                 }
                                 else
                                 {
-                                    minithumb->scale((max_mini_thumb_size*w)/h, max_mini_thumb_size, 1);
+                                    minithumb->scale((thumb_small*w)/h, thumb_small, 1);
                                 }
                             }
 

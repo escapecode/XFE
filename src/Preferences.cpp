@@ -223,16 +223,16 @@ PreferencesBox::PreferencesBox(FXWindow* win, FXColor listbackcolor, FXColor lis
     group = new FXGroupBox(modes, _("Thumbnails and Icons"), GROUPBOX_TITLE_LEFT|FRAME_GROOVE|LAYOUT_FILL_X|LAYOUT_FILL_Y);
     matrix = new FXMatrix(group, 2, MATRIX_BY_COLUMNS|LAYOUT_SIDE_TOP|LAYOUT_FILL_Y);
     new FXLabel(matrix, _("Thumbnail small size"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
-    thumbnail_small = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
+    thumb_small = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
     new FXLabel(matrix, _("Thumbnail big size"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
-    thumbnail_big = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
+    thumb_big = new FXTextField(matrix, 15, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
     new FXLabel(matrix, _("Icon size"), NULL, JUSTIFY_LEFT|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW);
     icon_size = new FXTextField(matrix, 10, NULL, 0, FRAME_THICK|FRAME_SUNKEN|LAYOUT_FILL_COLUMN|LAYOUT_FILL_ROW|LAYOUT_FILL_X);
 	// - assign
-    max_big_thumb_size_prev = getApp()->reg().readStringEntry("OPTIONS", "max_big_thumb_size", "160");	// TODO make it so stored as int
-    thumbnail_big->setText(max_big_thumb_size_prev);
-    max_mini_thumb_size_prev = getApp()->reg().readStringEntry("OPTIONS", "max_mini_thumb_size", "20");
-    thumbnail_small->setText(max_mini_thumb_size_prev);
+    thumb_big_prev = getApp()->reg().readStringEntry("OPTIONS", "thumb_big", "160");	// TODO make it so stored as int
+    thumb_big->setText(thumb_big_prev);
+    thumb_small_prev = getApp()->reg().readStringEntry("OPTIONS", "thumb_small", "20");
+    thumb_small->setText(thumb_small_prev);
     icon_size_prev = getApp()->reg().readStringEntry("OPTIONS", "icon_size", "16");
     icon_size->setText(icon_size_prev);
 
@@ -1728,8 +1728,8 @@ long PreferencesBox::onCmdAccept(FXObject* o, FXSelector s, void* p)
     getApp()->reg().writeUnsignedEntry("OPTIONS", "root_mode", rootmode->getCheck());
     getApp()->reg().writeUnsignedEntry("OPTIONS", "folder_limit", folderlimit->getCheck());
     getApp()->reg().writeStringEntry("OPTIONS", "folder_limit_folders", folders->getText().text());
-    getApp()->reg().writeStringEntry("OPTIONS", "max_big_thumb_size", thumbnail_big->getText().text());
-    getApp()->reg().writeStringEntry("OPTIONS", "max_mini_thumb_size", thumbnail_small->getText().text());
+    getApp()->reg().writeStringEntry("OPTIONS", "thumb_big", thumb_big->getText().text());
+    getApp()->reg().writeStringEntry("OPTIONS", "thumb_small", thumb_small->getText().text());
     getApp()->reg().writeStringEntry("OPTIONS", "icon_size", icon_size->getText().text());
 #ifdef STARTUP_NOTIFICATION
     getApp()->reg().writeUnsignedEntry("OPTIONS", "use_startup_notification", usesn->getCheck());

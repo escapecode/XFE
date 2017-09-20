@@ -71,8 +71,8 @@ private:
     FXTextField*   mountcmd;
     FXTextField*   umountcmd;
     FXTextField*   folders;
-    FXTextField*   thumbnail_big;
-    FXTextField*   thumbnail_small;
+    FXTextField*   thumb_big;
+    FXTextField*   thumb_small;
     FXTextField*   icon_size;
     FXString       oldiconpath;
     FXString       oldtxtviewer;
@@ -154,8 +154,8 @@ private:
     FXbool       rootmode_prev;
     FXbool       folderlimit_prev;
     FXString      folders_prev;
-    FXString		max_big_thumb_size_prev;
-    FXString		max_mini_thumb_size_prev;
+    FXString		thumb_big_prev;
+    FXString		thumb_small_prev;
     FXString		icon_size_prev;
 #ifdef STARTUP_NOTIFICATION
     FXbool usesn_prev;
