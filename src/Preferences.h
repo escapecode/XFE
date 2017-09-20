@@ -73,6 +73,7 @@ private:
     FXTextField*   folders;
     FXTextField*   thumbnail_big;
     FXTextField*   thumbnail_small;
+    FXTextField*   icon_size;
     FXString       oldiconpath;
     FXString       oldtxtviewer;
     FXString       oldtxteditor;
@@ -155,6 +156,7 @@ private:
     FXString      folders_prev;
     FXString		max_big_thumb_size_prev;
     FXString		max_mini_thumb_size_prev;
+    FXString		icon_size_prev;
 #ifdef STARTUP_NOTIFICATION
     FXbool usesn_prev;
 #endif

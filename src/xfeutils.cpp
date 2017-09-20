@@ -23,8 +23,6 @@
 #include "xfeutils.h"
 #include "../st/st.h"
 
-
-
 // Decode filename to get original again
 FXString FXPath::dequote(const FXString& file)
 {
@@ -827,7 +825,7 @@ FXulong pathsize(char* path, FXuint* nbfiles, FXuint* nbsubdirs, FXulong *totals
     DIR* dp;
     FXulong dsize;
     int ret;
-	
+
 	char buf[256];
 
     ret = lstatrep(path, &statbuf);
@@ -1740,6 +1738,11 @@ FXIcon* loadiconfile(FXApp* app, const FXString iconpath, const FXString iconnam
                 icon->loadPixels(str);
 
                 // Create it
+                FXuint my_icon_size = FXIntVal(app->reg().readStringEntry("OPTIONS", "icon_size", "16"));
+                if (my_icon_size > 0)
+                {
+					icon->scale(my_icon_size, my_icon_size);
+				}
                 icon->create();
 
                 // Done
