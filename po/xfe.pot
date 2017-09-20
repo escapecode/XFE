@@ -441,7 +441,7 @@ msgid "Change properties of the selected file?"
 msgstr ""
 
 #: ../src/Properties.cpp:1240 ../src/Properties.cpp:1609
-msgid "Confirm Change Properties"
+msgid "Confirm change of properties"
 msgstr ""
 
 #: ../src/Properties.cpp:1382 ../src/Properties.cpp:1395
